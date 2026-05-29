@@ -1,0 +1,73 @@
+# Optional alternate demo layout/profile.
+# Default demo launch now uses config/field_layout.yaml unless FIELD_LAYOUT_PATH is set.
+# Keep this file available for manual overrides.
+
+limit_xy: 15.0
+field_xy: 10.0
+bird_detection_xy: 10.0
+bird_demo_intro_s: 0.0
+bird_recover_s: 4.0
+bird_wander_margin: 1.5
+bird_wander_arrival_m: 1.2
+bird_spawn_margin: 0.5
+bird_altitude_m: 4.0
+bird_cruise_speed: 0.55
+bird_escape_speed: 0.85
+
+home:
+  x: 0.0
+  y: 0.0
+
+patrol_z: 5.0
+chase_z: 8.0
+return_z: 3.0
+
+patrol_waypoints:
+  - [-10.0, -10.0]
+  - [-10.0, 10.0]
+  - [10.0, 10.0]
+  - [10.0, -10.0]
+
+birds:
+  - x: 7.0
+    y: 5.0
+    profile: easy
+    dx: -1.0
+    dy: -0.25
+  - x: -6.0
+    y: 2.0
+    profile: hard
+    dx: 1.0
+    dy: -0.2
+  - x: 4.0
+    y: -7.0
+    profile: hard
+    dx: -0.5
+    dy: 0.6
+
+# Static obstacles (ROS XY). pose.position.z on /obstacles/* = cylinder radius.
+obstacle_clearance_m: 2.0
+obstacle_repulsion_gain: 1.0
+obstacles:
+  - name: house
+    x: -7.0
+    y: -0.39
+    radius: 3.0
+  - name: tree_nw
+    x: -5.0
+    y: 12.0
+    radius: 1.5
+  - name: rock_se
+    x: 8.0
+    y: -8.0
+    radius: 1.2
+
+scene_unity:
+  birds_root: {x: 0.0, y: 0.65, z: 0.0}
+  drone_visual: {x: 0.0, y: 0.65, z: 0.0}
+  house: {x: -7.0, y: 0.55, z: -0.39}
+  boundaries:
+    north: {x: 0.0, z: 15.0}
+    south: {x: 0.0, z: -15.0}
+    east: {x: 15.0, z: 0.0}
+    west: {x: -15.0, z: 0.0}
