@@ -27,6 +27,8 @@ $RECYCLE.BIN/
 *.swp
 *.bak
 
+unity/**/Assets/Ros2ForUnity/Plugins/
+
 # Unity under unity/ (github/gitignore Unity.gitignore)
 # https://github.com/github/gitignore/blob/main/Unity.gitignore
 .utmp/
@@ -109,3 +111,4 @@ unity/**/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property
 
 unity/**/[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 unity/**/[Aa]ssets/[Ss]ceneDependencyCache*
+

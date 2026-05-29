@@ -40,6 +40,7 @@ src/drone_system_pkg/
 unity/FieldDemo/
   Assets/Scripts/            # DroneVisual, BirdsVisual, FieldLayout, …
   Assets/StreamingAssets/field_layout.yaml
+  # Ros2ForUnity/Plugins/ not in git (see Unity section)
 ```
 
 ## Run
@@ -68,6 +69,8 @@ Unity does **not** run PX4, bird physics, or coordination. `FieldDemo` only **mi
 **Authoritative for logic:** `config/field_layout.yaml` and the ROS nodes. Unity reads a copy under `Assets/StreamingAssets/` (`./scripts/sync_unity.sh` copies it on launch).
 
 **YAML vs scene:** the Unity scene was tweaked in the Editor (props, scale, placement). It may not line up exactly with the YAML anymore. Trust YAML + ROS for behavior; treat Unity as presentation only.
+
+**Ros2ForUnity `Plugins/`** are not in git (too large). Install [ROS2 For Unity](https://github.com/RobotecAI/ros2-for-unity) into `unity/FieldDemo` on each machine.
 
 ## Perception node (shim, not vision)
 
