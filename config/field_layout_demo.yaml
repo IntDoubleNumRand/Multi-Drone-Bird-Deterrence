@@ -1,15 +1,27 @@
-# Optional alternate demo layout/profile.
-# Default demo launch now uses config/field_layout.yaml unless FIELD_LAYOUT_PATH is set.
-# Keep this file available for manual overrides.
+# Source of truth for ROS. Geometry matches FieldDemo.unity (do not edit Unity to match this).
+# ROS map: X = Unity X, Y = Unity Z, Z = altitude (Unity Y).
+# Unity visuals are separate; ROS behavior is driven from this file.
 
-limit_xy: 15.0
-field_xy: 10.0
-bird_detection_xy: 10.0
-bird_demo_intro_s: 0.0
+# World boundary: birds roam and are hard-clamped here (+/-60 m).
+limit_xy: 60.0
+# Field fence (walls): +/-15 m, used for drone limits and "outside walls" logic, not bird roam clamp.
+field_xy: 15.0
+bird_detection_box_m:
+  x: 3.0
+  y: 3.0
+  z: 20.0
+target_lock_s: 2.5
+return_home_when_no_targets: true
+boundary_hold_s: 5.0
+post_assignment_rest_s: 4.0
 bird_recover_s: 4.0
+hard_bird_reentry_s: 25.0
 bird_wander_margin: 1.5
+bird_world_wall_margin_easy: 1.5
+bird_world_wall_margin_hard: 0.35
+bird_hard_wall_ring_m: 1.2
 bird_wander_arrival_m: 1.2
-bird_spawn_margin: 0.5
+bird_spawn_margin: 2.0
 bird_altitude_m: 4.0
 bird_cruise_speed: 0.55
 bird_escape_speed: 0.85
@@ -18,9 +30,12 @@ home:
   x: 0.0
   y: 0.0
 
-patrol_z: 5.0
-chase_z: 8.0
-return_z: 3.0
+min_flight_z: 3.0
+patrol_z: 6.0
+chase_z: 7.0
+chase_standoff_m: 1.5
+return_z: 6.0
+rest_z: 0.3
 
 patrol_waypoints:
   - [-10.0, -10.0]
@@ -28,44 +43,58 @@ patrol_waypoints:
   - [10.0, 10.0]
   - [10.0, -10.0]
 
+# BirdSpawn markers in FieldDemo.unity (Unity x,z -> ROS x,y).
 birds:
-  - x: 7.0
-    y: 5.0
+  - x: 11.0
+    y: 3.0
+    z: 4.0
     profile: easy
     dx: -1.0
-    dy: -0.25
-  - x: -6.0
-    y: 2.0
+    dy: 0.0
+  - x: -13.0
+    y: 9.0
+    z: 4.0
     profile: hard
     dx: 1.0
     dy: -0.2
-  - x: 4.0
-    y: -7.0
+  - x: 12.0
+    y: -11.0
+    z: 4.0
     profile: hard
-    dx: -0.5
-    dy: 0.6
+    dx: 0.7
+    dy: 0.4
 
-# Static obstacles (ROS XY). pose.position.z on /obstacles/* = cylinder radius.
 obstacle_clearance_m: 2.0
 obstacle_repulsion_gain: 1.0
+obstacle_flyover_clearance_m: 1.5
+# height <= this: fly over; taller: go around horizontally.
+obstacle_max_flyover_z: 15.0
 obstacles:
   - name: house
-    x: -7.0
-    y: -0.39
-    radius: 3.0
+    shape: box
+    x_min: -12.65
+    x_max: -1.6
+    y_min: -6.5
+    y_max: 6.5
+    height: 10.0
   - name: tree_nw
+    shape: cylinder
     x: -5.0
     y: 12.0
     radius: 1.5
+    height: 8.0
   - name: rock_se
+    shape: cylinder
     x: 8.0
     y: -8.0
     radius: 1.2
+    height: 1.0
 
 scene_unity:
   birds_root: {x: 0.0, y: 0.65, z: 0.0}
   drone_visual: {x: 0.0, y: 0.65, z: 0.0}
   house: {x: -7.0, y: 0.55, z: -0.39}
+  house_height_m: 10.0
   boundaries:
     north: {x: 0.0, z: 15.0}
     south: {x: 0.0, z: -15.0}

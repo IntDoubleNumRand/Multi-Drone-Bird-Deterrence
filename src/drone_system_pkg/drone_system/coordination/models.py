@@ -7,6 +7,7 @@ class DroneSnapshot:
     drone_id: str
     x: float
     y: float
+    z: float = 0.0
     valid: bool = True
 
 
@@ -16,6 +17,7 @@ class BirdSnapshot:
     x: float
     y: float
     state: int
+    z: float = 0.0
 
 
 @dataclass

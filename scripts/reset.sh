@@ -7,6 +7,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "Stopping ros2 / gazebo / gz ..."
 pkill -9 -f '[r]os2' 2>/dev/null || true
+pkill -9 -f '[m]avros' 2>/dev/null || true
+pkill -9 -f '[p]x4' 2>/dev/null || true
 pkill -9 -f '[g]azebo' 2>/dev/null || true
 pkill -9 -f '[g]zserver' 2>/dev/null || true
 pkill -9 -f '[g]zclient' 2>/dev/null || true

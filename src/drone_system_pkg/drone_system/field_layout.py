@@ -55,3 +55,15 @@ def obstacle_list():
 def obstacle_count():
     obs = obstacle_list()
     return len(obs) if obs else 0
+
+
+def bird_detection_box_half():
+    """Half-extents (m) of per-bird axis-aligned detection volume."""
+    box = load_layout().get("bird_detection_box_m", {})
+    if not isinstance(box, dict):
+        return (1.0, 1.0, 1.0)
+    return (
+        max(0.1, float(box.get("x", 2.0))) / 2.0,
+        max(0.1, float(box.get("y", 2.0))) / 2.0,
+        max(0.1, float(box.get("z", 2.0))) / 2.0,
+    )

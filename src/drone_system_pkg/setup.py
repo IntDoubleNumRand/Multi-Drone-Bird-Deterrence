@@ -26,6 +26,7 @@ setup(
             'coordinator_node = drone_system.coordinator_runtime:main',
             'centralized_coordinator_node = drone_system.centralized_coordinator_node:main',
             'birds_node = drone_system.birds_node:main',
+            'chased_mask_aggregator_node = drone_system.chased_mask_aggregator_node:main',
             'visualization_node = drone_system.visualize_node:main',
             'perception_node = drone_system.perception_node:main',
             'obstacles_node = drone_system.obstacles_node:main',
