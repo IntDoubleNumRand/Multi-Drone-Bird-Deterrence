@@ -1,6 +1,6 @@
 # Drone bird-deterrence (ROS 2 + PX4 / Gazebo / MAVROS)
 
-Simulated birds in ROS; one drone chases via offboard setpoints. Layout: `config/field_layout.yaml`.
+Two simulated drones patrol a field, receive centralized bird assignments, and fly PX4 OFFBOARD setpoints through MAVROS. Birds, obstacles, and patrol geometry come from `config/field_layout.yaml`.
 
 **Needs:** Ubuntu 22.04, ROS 2 Humble, PX4 SITL, Gazebo, MAVROS 2. Optional: RViz or Unity (`unity/FieldDemo`, `./scripts/sync_unity.sh`).
 
@@ -15,7 +15,7 @@ doc/
   stack.png behavior.png roadmap.png
 
 scripts/
-  px4_sitl.sh mavros_sitl.sh          # sim + MAVROS (T1-T2)
+  px4_sitl.sh mavros_sitl.sh mavros_multi_sitl.sh   # sim + MAVROS (T1-T2)
   build.sh launch.sh launch_demo.sh stop_app.sh reset.sh
   sync_unity.sh launch_unity.sh
 
@@ -25,7 +25,7 @@ src/drone_system_pkg/
     demo.launch.py
   drone_system/
     field_layout.py          # load YAML (shared with Unity)
-    birds_node.py            # sim birds → /birds/raw
+    birds_node.py            # sim birds -> /birds/raw
     bird_behavior.py         # wander / flee / recover math
     obstacles_node.py        # static obstacles
     perception_node.py       # relay to /birds/positions, /obstacles/positions
@@ -74,11 +74,11 @@ Unity does **not** run PX4, bird physics, or coordination. `FieldDemo` only **mi
 
 ## Perception node (shim, not vision)
 
-`perception_node` is a **topic relay** (`/birds/raw` → `/birds/positions`, `/obstacles/static` → `/obstacles/positions`). There is no camera or detector yet.
+`perception_node` is a **topic relay** (`/birds/raw` -> `/birds/positions`, `/obstacles/static` -> `/obstacles/positions`). There is no camera or detector yet.
 
 It keeps a stable “detected targets” interface so **coordination code does not care** whether birds come from `birds_node` today or a real perception stack later.
 
-**My focus:** multi-drone coordination. Add more `coordinator_node` instances and IDs in `centralized_coordinator_node`. Later: different drone roles in `coordination/`, or real perception on `/birds/positions` without changing the coordinators.
+**Current default:** two identical drones (`drone_1`, `drone_2`) with centralized assignment, nearest-threat bird fleeing, and merged chased masks. Later: different drone roles in `coordination/`, or real perception on `/birds/positions` without changing the coordinators.
 
 ## Stack
 
@@ -98,10 +98,15 @@ It keeps a stable “detected targets” interface so **coordination code does n
 |-------|------|
 | `/birds/positions` | Bird poses |
 | `/obstacles/positions` | Obstacles (`z` = radius) |
-| `/mavros/local_position/pose` | Drone pose |
-| `/mavros/setpoint_position/local` | Setpoints |
-| `/bird/chased` | Chase flag |
-| `/central/assignment/drone_1` | Assigned bird index |
+| `/drone_1/battery` | Drone 1 battery telemetry from MAVROS |
+| `/drone_2/battery` | Drone 2 battery telemetry from MAVROS |
+| `/drone_1/local_position/pose` | Drone 1 pose |
+| `/drone_2/local_position/pose` | Drone 2 pose |
+| `/drone_1/setpoint_position/local` | Drone 1 setpoints |
+| `/drone_2/setpoint_position/local` | Drone 2 setpoints |
+| `/birds/chased_mask` | Aggregated per-bird chase mask (OR across drones) |
+| `/central/assignment/drone_1` | Drone 1 assigned bird index |
+| `/central/assignment/drone_2` | Drone 2 assigned bird index |
 
 ## If chase does not start
 
